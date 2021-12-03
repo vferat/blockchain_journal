@@ -1,0 +1,44 @@
+<html>
+  <body>
+
+    <div id="qr-reader" style="width:500px"></div>
+    <div id="qr-reader-results"></div>
+
+    <form action = "{{ url_for('test') }}" method = "post" id='locationform'>
+        <input type='hidden' name="latitude" value="None" id='latitude'/>
+        <input type='hidden' name="longitude" value="None" id='longitude'/> 
+        <input type='hidden' name="qrcode" value="None" id='qrcode'/> 
+    </form>   
+
+
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+
+    <script>
+      console.log('script');
+      navigator.geolocation.getCurrentPosition(setPosition);
+
+      function setPosition(position) {
+        console.log(position.coords.latitude)
+        console.log(position.coords.longitude)
+        document.getElementById("latitude").value = position.coords.latitude
+        document.getElementById("longitude").value = position.coords.longitude
+      }
+
+
+      var resultContainer = document.getElementById('qr-reader-results');
+
+      function onScanSuccess(qrCodeMessage) {
+        navigator.geolocation.getCurrentPosition(setPosition);
+        document.getElementById('qrcode').value = qrCodeMessage
+        document.getElementById('locationform').submit();
+      }
+
+      var html5QrcodeScanner = new Html5QrcodeScanner(
+          "qr-reader", { fps: 10, qrbox: 250 });
+      html5QrcodeScanner.render(onScanSuccess);
+    </script>
+
+  </body>
+</html>
+
